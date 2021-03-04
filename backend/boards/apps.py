@@ -1,5 +1,5 @@
 from django.apps import AppConfig
 
 
-class CardsConfig(AppConfig):
-    name = 'cards'
+class BoardsConfig(AppConfig):
+    name = 'boards'
