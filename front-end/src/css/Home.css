@@ -1,0 +1,28 @@
+
+body {
+  font: 14px "Century Gothic", Futura, sans-serif;
+  
+  background-color: rgb(91,75,59);
+}
+
+.listBox {
+  background: rgb(235,236,240);
+  border: 1px solid #999;
+  float: left;
+  font-size: 20px;
+  font-weight: bold;
+  line-height: 34px;
+  margin-right: -1px;
+  margin-top: -1px;
+  padding: 0;
+  text-align: top;
+  width: 280px;
+}
+
+
+@media only screen and (max-width:1680px) {
+  /* For mobile phones: */
+  .left, .main, .right {
+    width: 100%;
+  }
+}
