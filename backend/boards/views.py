@@ -14,11 +14,26 @@ class ListViewSet(viewsets.ModelViewSet):
     # lookup_field = models.List.pk
     # filter_backends = (DjangoFilterBackend, )
 
-    # def create(self, request, *args, **kwargs):
-    #     obj = self.get_object()
-    #     new_order = request.data.get('order', None)
-    #     models.List.objects.move(obj,new_order)
-    #     return Response({'success': True, 'order': new_order})
+    @action(methods=['put'], detail=True)
+    def move(self, request, *args, **kwargs):
+        obj = self.get_object()
+        new_order = request.data.get('order', None)
+
+        if new_order is None:
+            return Response(
+                    data={'error': 'No order given'},
+                    status=status.HTTP_400_BAD_REQUEST,
+                    )
+
+        if int(new_order) < 0:
+            return Response(
+                    data={'error': 'Order cannnot be below 0'},
+                    status=status.HTTP_400_BAD_REQUEST,
+                    )
+
+
+        models.List.objects.move(obj, new_order)
+        return Response({'success': True, 'order': new_order})
 
 class CardViewSet(viewsets.ModelViewSet):
     queryset = models.Card.objects.all().order_by('order')

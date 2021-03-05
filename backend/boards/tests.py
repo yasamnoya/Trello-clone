@@ -14,9 +14,9 @@ class BoardTests(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertEqual(List.objects.count(), 1)
         self.assertEqual(List.objects.get().title, test_title)
+        self.assertEqual(List.objects.get().order, 0)
 
-    def test_order_increment(self):
-
+    def test_list_order_increment(self):
         url = reverse('list-list')
         data1 = {'title': 'old'}
         data2 = {'title': 'new'}
@@ -24,3 +24,16 @@ class BoardTests(APITestCase):
         response = self.client.post(url, data2, format='json')
         self.assertEqual(List.objects.count(), 2)
         self.assertEqual(List.objects.get(title='new').order, 1)
+
+    def test_list_move(self):
+        self.test_list_order_increment()
+
+        to_be_moved = List.objects.get(title='new')
+        url = reverse('list-move', args=(to_be_moved.id,))
+        data={'order': 0}
+        response = self.client.put(url, data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        moved = List.objects.get(title='new')
+        updated = List.objects.get(title='old')
+        self.assertEqual(moved.order, 0)
+        self.assertEqual(updated.order, 1)
