@@ -82,7 +82,7 @@ class CardManager(models.Manager):
             )
 
 class ListManager(models.Manager):
-    def create(self,**kwargs):
+    def create(self, **kwargs):
         queryset = self.get_queryset()
         instance = self.model(**kwargs)
 
@@ -93,11 +93,12 @@ class ListManager(models.Manager):
             )['order__max']
 
             if max_order == None:
-                max_order = 0
-
+                max_order = -1
             new_order = max_order + 1
+
+            instance.order = new_order
             instance.save()
-            return instance()
+            return instance
 
     def move(self, obj, new_order):
         queryset = self.get_queryset()

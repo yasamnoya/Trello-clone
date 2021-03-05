@@ -11,13 +11,14 @@ from . import serializers
 class ListViewSet(viewsets.ModelViewSet):
     queryset = models.List.objects.all().order_by('order')
     serializer_class = serializers.ListSerializer
+    # lookup_field = models.List.pk
     # filter_backends = (DjangoFilterBackend, )
 
-    def create(self, request, *args, **kwargs):
-        obj = self.get_object()
-        new_order = request.data.get('order', None)
-        models.List.objects.move(obj,new_order)
-        return Response({'success': True, 'order': new_order})
+    # def create(self, request, *args, **kwargs):
+    #     obj = self.get_object()
+    #     new_order = request.data.get('order', None)
+    #     models.List.objects.move(obj,new_order)
+    #     return Response({'success': True, 'order': new_order})
 
 class CardViewSet(viewsets.ModelViewSet):
     queryset = models.Card.objects.all().order_by('order')
@@ -29,5 +30,5 @@ class CardViewSet(viewsets.ModelViewSet):
         obj = self.get_object()
         new_order = request.data.get('order', None)
         new_list = request.data.get('to_list')
-        models.List.objects.move(obj,new_order)
+        models.Card.objects.move(obj, new_list, new_order)
         return Response({'success': True, 'list': new_list, 'order': new_order})
