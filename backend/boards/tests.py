@@ -37,3 +37,16 @@ class BoardTests(APITestCase):
         updated = List.objects.get(title='old')
         self.assertEqual(moved.order, 0)
         self.assertEqual(updated.order, 1)
+
+    def test_list_rename(self):
+        self.test_create_list()
+        to_be_renamed = List.objects.get()
+        new_title = 'new title'
+
+        url = reverse('list-detail', args=(to_be_renamed.id, ))
+        data = {'title': new_title}
+
+        response = self.client.put(url, data, format='json')
+        renamed = List.objects.get()
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(renamed.title, new_title)
