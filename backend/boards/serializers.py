@@ -4,9 +4,9 @@ from .models import List, Card
 class ListSerializer(serializers.ModelSerializer):
     class Meta:
         model = List
-        fields = ['title', 'order']
+        fields = ['id', 'title', 'order']
 
 class CardSerializer(serializers.ModelSerializer):
     class Meta:
         model = Card
-        fields = ['title', 'order', 'to_list']
+        fields = ['id', 'title', 'order', 'to_list']
