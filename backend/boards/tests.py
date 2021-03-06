@@ -50,3 +50,13 @@ class BoardTests(APITestCase):
         renamed = List.objects.get()
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(renamed.title, new_title)
+
+    def test_list_delete(self):
+        self.test_list_order_increment()
+
+        to_be_deleted = List.objects.get(title='old')
+        url = reverse('list-detail', args=(to_be_deleted.id, ))
+        response = self.client.delete(url, format='json')
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+        self.assertEqual(List.objects.count(), 1)
+        self.assertEqual(List.objects.get().order, 0)

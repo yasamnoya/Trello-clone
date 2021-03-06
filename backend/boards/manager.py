@@ -126,12 +126,17 @@ class ListManager(models.Manager):
             obj.save()
 
     def delete(self, obj):
+        print('------------')
+        print('a;slkdfj;aldfks;adfkjs')
+        print('------------')
+
         queryset = self.get_queryset()
 
         with transaction.atomic():
             queryset.filter(
-                to_list=obj.to_list,
                 order__gt=obj.order
             ).update(
                 order=models.F('order') - 1
             )
+
+            obj.delete()

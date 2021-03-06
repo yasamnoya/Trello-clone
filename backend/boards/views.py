@@ -35,6 +35,12 @@ class ListViewSet(viewsets.ModelViewSet):
         models.List.objects.move(obj, new_order)
         return Response({'success': True, 'order': new_order})
 
+    def destroy(self, request, *args, **kwargs):
+        obj = self.get_object()
+        models.List.objects.delete(obj)
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+
 class CardViewSet(viewsets.ModelViewSet):
     queryset = models.Card.objects.all().order_by('order')
     serializer_class = serializers.CardSerializer
