@@ -126,10 +126,6 @@ class ListManager(models.Manager):
             obj.save()
 
     def delete(self, obj):
-        print('------------')
-        print('a;slkdfj;aldfks;adfkjs')
-        print('------------')
-
         queryset = self.get_queryset()
 
         with transaction.atomic():
