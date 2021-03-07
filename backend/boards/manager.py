@@ -14,18 +14,19 @@ class CardManager(models.Manager):
             )['order__max']
 
             if max_order == None:
-                max_order = 0
+                max_order = - 1
 
             new_order = max_order + 1
+            instance.order = new_order
             instance.save()
-            return instance()
+            return instance
 
 
-    def move(self, obj, new_list, new_order):
+    def move(self, obj, new_list_obj, new_order):
         queryset = self.get_queryset()
 
         with transaction.atomic():
-            if new_list == obj.to_list:
+            if new_list_obj == obj.to_list:
                 if obj.order > int(new_order):
                     queryset.filter(
                         to_list=obj.to_list,
@@ -60,13 +61,13 @@ class CardManager(models.Manager):
 
                 # increse the order of new list
                 queryset.filter(
-                    to_list=new_list,
+                    to_list=new_list_obj,
                     order__gte=new_order
                 ).update(
                     order=models.F('order') + 1
                 )
 
-                obj.to_list = new_list
+                obj.to_list = new_list_obj
                 obj.order = new_order
                 obj.save()
 
@@ -81,6 +82,8 @@ class CardManager(models.Manager):
                 order=models.F('order') - 1
             )
 
+        obj.delete()
+
 class ListManager(models.Manager):
     def create(self, **kwargs):
         queryset = self.get_queryset()
@@ -93,7 +96,7 @@ class ListManager(models.Manager):
             )['order__max']
 
             if max_order == None:
-                max_order = -1
+                max_order = - 1
             new_order = max_order + 1
 
             instance.order = new_order

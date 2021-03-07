@@ -47,9 +47,41 @@ class CardViewSet(viewsets.ModelViewSet):
     # filter_backends = (DjangoFilterBackend, )
     # filter_fields = ('to_list',)
 
-    def create(self, request, *args, **kwargs):
+    @action(methods=['put'], detail=True)
+    def move(self, request, *args, **kwargs):
         obj = self.get_object()
         new_order = request.data.get('order', None)
-        new_list = request.data.get('to_list')
-        models.Card.objects.move(obj, new_list, new_order)
-        return Response({'success': True, 'list': new_list, 'order': new_order})
+        new_list = request.data.get('list', None)
+        new_list_instance = models.List.objects.get(id=new_list)
+
+        if new_order is None:
+            return Response(
+                    data={'error': 'No order given'},
+                    status=status.HTTP_400_BAD_REQUEST,
+                    )
+
+        if new_list is None:
+            return Response(
+                    data={'error': 'No list given'},
+                    status=status.HTTP_400_BAD_REQUEST,
+                    )
+
+        if int(new_order) < 0:
+            return Response(
+                    data={'error': 'Order cannnot be below 0'},
+                    status=status.HTTP_400_BAD_REQUEST,
+                    )
+
+        if new_list_instance is None:
+            return Response(
+                    data={'error': 'List not found'},
+                    status=status.HTTP_400_BAD_REQUEST,
+                    )
+
+        models.Card.objects.move(obj, new_list_instance, new_order)
+        return Response({'success': True, 'to_list': new_list, 'order': new_order})
+
+    def destroy(self, request, *args, **kwargs):
+        obj = self.get_object()
+        models.Card.objects.delete(obj)
+        return Response(status=status.HTTP_204_NO_CONTENT)
