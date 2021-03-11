@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import '../src/css/index.css';
-import App from './components/App';
+import Home from './components/Home';
 import * as serviceWorker from './serviceWorker';
 
 declare global
@@ -42,7 +42,7 @@ declare global
 // handleError(funcs.EApiBoardGetValue(fuction, nFunction));
 
 // console.log("function:", nFunction.deref());
-ReactDOM.render(<App />, document.getElementById('root'));
+ReactDOM.render(<Home />, document.getElementById('root'));
 
 
 // If you want your app to work offline and load faster, you can change
