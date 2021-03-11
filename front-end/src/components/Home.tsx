@@ -51,110 +51,12 @@ class Home extends React.Component<Myprops, Mystate>
 		console.log("add list");
 		let { list } = this.state;
 
-		const newList = <List></List>
+		const newList = <List/>
 
 		list.push(newList);
 
 		this.setState({ list: list });
-
-		// list[listID] =
-		// 	<div key="" className="listBox">
-		// 		<Input placeholder="Placeholder" inputProps={{ 'aria-label': 'description' }} />
-
-		// 		<div className="cardBox">
-		// 			{card}
-		// 		</div>
-
-		// 		<Button variant="contained" color="primary" onClick={this.addNewCard.bind(this)} id={listID.toString()}>
-		// 			add new card
-		// 		</Button>
-		// 	</div>
-		// listID++;
-
-		// this.setState({
-		// 	list: list,
-		// 	listID: listID,
-		// })
 	}
-
-	addNewCard(e: any)
-	{
-		// const test = document.getElementById("0");
-		// console.log(test);
-		// console.log("add card");
-		// console.log(e.target.id);
-		// let { card, cardID } = this.state;
-		// const listID = e.target.id;
-		// console.log(listID);
-		// card[listID][cardID[listID]] = (
-		// 	<div>
-		// 		<Input id={cardID[listID].toString()} placeholder="Placeholder" inputProps={{ 'aria-label': 'description' }} onChange={this.cardNameChange.bind(this)} />
-		// 	</div>
-		// )
-		// cardID[listID]++;
-
-		// this.setState({
-		// 	card: card,
-		// 	cardID: cardID,
-		// });
-	}
-
-	clickCard(e: any)
-	{
-		// console.log("card click");
-		// const toRenameCard = document.getElementById('save' + e.target.id.toString());
-		// console.log(toRenameCard)
-		// const { card } = this.state;
-
-
-		// this.setState({
-		// 	card: card
-		// })
-	}
-
-	cardNameChange(e: any)
-	{
-		// console.log("card name change");
-		// console.log(e.target.id);
-
-		// let { cardID } = this.state;
-
-		// const toRenameCard = document.getElementById('save' + e.target.id.toString());
-
-		// console.log(toRenameCard)
-		// if (toRenameCard)
-		// 	toRenameCard.removeAttribute("disabled");
-
-		// this.setState({
-		// 	cardID: cardID,
-		// })
-	}
-
-	cardRename(e: any)
-	{
-		// console.log("save click");
-		// console.log(e.target.id);
-
-		// const { card } = this.state;
-
-		// const toRenameCard = document.getElementById('save' + e.target.id.toString());
-		// if (toRenameCard)
-		// 	toRenameCard.setAttribute("disabled", "true");
-
-		// card[Number(e.target.id)] = (
-		// 	<div>
-		// 		<Input id={e.target.id.toString()} placeholder="Placeholder" inputProps={{ 'aria-label': 'description' }} onClick={this.clickCard.bind(this)} onChange={this.cardNameChange.bind(this)} />
-		// 		<Button id={'save' + e.target.id.toString()} variant="contained" color="primary" onClick={this.cardRename.bind(this)} disabled>
-		// 			save
-		// 		</Button>
-		// 	</div>
-		// )
-
-		// this.setState({
-		// 	card: card
-		// })
-	}
-
 
 	render()
 	{

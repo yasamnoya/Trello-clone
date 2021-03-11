@@ -32,6 +32,27 @@ class List extends React.Component<Myprops, Mystate>
         };
     }
 
+    componentDidMount()
+    {
+        const { title } = this.state;
+        const data = { title: title };
+
+        fetch('http://localhost:8000/boards/lists/', {
+            method: "POST",
+            body: JSON.stringify(data),
+            headers: {
+                'content-type': 'application/json'
+            },})
+            .then(res =>
+            {
+                return res.json();
+            })
+            .then(data =>
+            {
+                console.log(data);
+            })
+    }
+
     addNewCard(e: any)
     {
         console.log("add new card");
@@ -55,8 +76,8 @@ class List extends React.Component<Myprops, Mystate>
 
     editing(e: any)
     {
-        
-            
+
+
         this.setState({
             isEditing: true,
         });
@@ -76,8 +97,8 @@ class List extends React.Component<Myprops, Mystate>
         const { cards, isEditing, title } = this.state;
         let { titleComponent } = this.state;
 
-        if (isEditing)    
-            titleComponent = <TextField id="outlined-title" label="title" variant="outlined" onBlur={this.notEditing.bind(this)} onChange={this.rename.bind(this)} value={title} />          
+        if (isEditing)
+            titleComponent = <TextField id="outlined-title" label="title" variant="outlined" onBlur={this.notEditing.bind(this)} onChange={this.rename.bind(this)} value={title} />
         else
             titleComponent = <label onClick={this.editing.bind(this)}>{title}</label>
 
