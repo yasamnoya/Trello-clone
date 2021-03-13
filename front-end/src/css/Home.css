@@ -5,18 +5,9 @@ body {
   background-color: rgb(91,75,59);
 }
 
-.listBox {
-  background: rgb(235,236,240);
-  border: 1px solid #999;
-  float: left;
-  font-size: 20px;
-  font-weight: bold;
-  line-height: 34px;
-  margin-right: -1px;
-  margin-top: -1px;
-  padding: 10px;
-  text-align: top;
-  width: 280px;
+.lists-canvas
+{
+      white-space: nowrap;
 }
 
 

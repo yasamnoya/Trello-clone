@@ -63,13 +63,12 @@ class Home extends React.Component<Myprops, Mystate>
 		const { list } = this.state;
 
 		return (
-			<div>
+			<div className="lists-canvas">
 				<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap" />
 
 				<div>
 					{list}
 				</div>
-
 
 				<Button variant="contained" color="primary" onClick={this.addList.bind(this)}>
 					add list

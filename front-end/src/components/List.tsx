@@ -6,7 +6,6 @@ import Card from './Card';
 import Input from '@material-ui/core/Input';
 import Button from '@material-ui/core/Button';
 import { TextField } from '@material-ui/core';
-import Paper from '@material-ui/core/Paper';
 
 interface Myprops
 {
@@ -15,7 +14,6 @@ interface Mystate
 {
     title: string;
     cards: JSX.Element[];
-    titleComponent: JSX.Element;
     isEditing: boolean;
 }
 
@@ -27,7 +25,6 @@ class List extends React.Component<Myprops, Mystate>
         this.state = {
             title: "title",
             cards: [],
-            titleComponent: <TextField id="outlined-search" label="Search field" variant="outlined" onBlur={this.notEditing.bind(this)} />,
             isEditing: true
         };
     }
@@ -42,7 +39,8 @@ class List extends React.Component<Myprops, Mystate>
             body: JSON.stringify(data),
             headers: {
                 'content-type': 'application/json'
-            },})
+            },
+        })
             .then(res =>
             {
                 return res.json();
@@ -76,8 +74,6 @@ class List extends React.Component<Myprops, Mystate>
 
     editing(e: any)
     {
-
-
         this.setState({
             isEditing: true,
         });
@@ -85,6 +81,8 @@ class List extends React.Component<Myprops, Mystate>
 
     notEditing(e: any)
     {
+        if (e.target.value === "")
+            e.target.value = "title";
         this.setState({
             isEditing: false,
             title: e.target.value
@@ -95,26 +93,28 @@ class List extends React.Component<Myprops, Mystate>
     render()
     {
         const { cards, isEditing, title } = this.state;
-        let { titleComponent } = this.state;
+        let titleComponent = null;
 
         if (isEditing)
-            titleComponent = <TextField id="outlined-title" label="title" variant="outlined" onBlur={this.notEditing.bind(this)} onChange={this.rename.bind(this)} value={title} />
+            titleComponent = <TextField id="outlined-title" variant="outlined" onBlur={this.notEditing.bind(this)} onChange={this.rename.bind(this)} value={title} />
         else
             titleComponent = <label onClick={this.editing.bind(this)}>{title}</label>
 
         return (
-            <div className="listBox">
+            <div className="list-wrapper">
+                <div className="listBox">
 
-                <div>
-                    {titleComponent}
-                </div>
+                    <div>
+                        {titleComponent}
+                    </div>
 
-                <div>
-                    {cards}
-                </div>
-                <Button variant="contained" color="primary" onClick={this.addNewCard.bind(this)}>
-                    add new card
+                    <div>
+                        {cards}
+                    </div>
+                    <Button variant="contained" color="primary" onClick={this.addNewCard.bind(this)}>
+                        add new card
 		 		</Button>
+                </div>
             </div>
         )
     }
