@@ -1,4 +1,4 @@
-.listBox {
+.list-wrapper {
   background: rgb(235,236,240);
   border: 1px solid #999;
   float: left;
@@ -12,10 +12,6 @@
   width: 280px;
   height:300px;
   overflow: auto;
-}
-
-.list-wrapper{
-  background: rgb(72, 102, 223);
 }
 
 @media (prefers-reduced-motion: no-preference) {

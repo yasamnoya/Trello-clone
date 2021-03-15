@@ -32,7 +32,31 @@ class Home extends React.Component<Myprops, Mystate>
 	// Set timer 1000ms
 	componentDidMount()
 	{
-		//this.timerId = setInterval(this.update.bind(this), 1000);
+		fetch('http://localhost:8000/boards/lists/', {
+			method: "GET",
+		}).then(res =>
+		{
+			return res.json();
+		}).then(data =>
+		{
+			console.log(data);
+			data.forEach((item: any) =>
+			{
+				console.log(item);
+			})
+
+
+
+			fetch('http://localhost:8000/boards/cards/', {
+				method: "GET",
+			}).then(res =>
+			{
+				return res.json();
+			}).then(data =>
+			{
+				console.log(data);
+			})
+		})
 	}
 
 	// Clean timer when component dies
@@ -51,11 +75,30 @@ class Home extends React.Component<Myprops, Mystate>
 		console.log("add list");
 		let { list } = this.state;
 
-		const newList = <List/>
+		const data = { title: "title" };
+		let id = -1, title = "title", order = -1;
+		fetch('http://localhost:8000/boards/lists/', {
+			method: "POST",
+			body: JSON.stringify(data),
+			headers: {
+				'content-type': 'application/json'
+			},
+		}).then(res =>
+		{
+			return res.json();
+		}).then(data =>
+		{
+			console.log(data);
+			id = Number(data.id);
+			order = Number(data.order);
+			console.log(id);
 
-		list.push(newList);
+			const newList = <List id={id} title={title} order={order} />
+			list.push(newList);
+			this.setState({ list: list });
+		})
 
-		this.setState({ list: list });
+
 	}
 
 	render()
