@@ -39,13 +39,11 @@ class Home extends React.Component<Myprops, Mystate>
 			return res.json();
 		}).then(data =>
 		{
-			console.log(data);
 			data.forEach((item: any) =>
 			{
 				console.log(item);
+				this.initialList(item);
 			})
-
-
 
 			fetch('http://localhost:8000/boards/cards/', {
 				method: "GET",
@@ -54,7 +52,10 @@ class Home extends React.Component<Myprops, Mystate>
 				return res.json();
 			}).then(data =>
 			{
-				console.log(data);
+				data.forEach((item: any) =>
+				{
+					console.log(item);
+				})
 			})
 		})
 	}
@@ -68,6 +69,21 @@ class Home extends React.Component<Myprops, Mystate>
 	update()
 	{
 
+	}
+
+	initialList(item: any)
+	{
+		let { list } = this.state;
+
+		let id = -1, title = "title", order = -1;
+		id = Number(item.id);
+		title = item.title.toString();
+		console.log(title);
+		order = Number(item.order);
+
+		const newList = <List id={id} title={title} order={order} />
+		list.push(newList);
+		this.setState({ list: list });
 	}
 
 	addList(e: any)
@@ -89,6 +105,7 @@ class Home extends React.Component<Myprops, Mystate>
 		}).then(data =>
 		{
 			console.log(data);
+			
 			id = Number(data.id);
 			order = Number(data.order);
 			console.log(id);

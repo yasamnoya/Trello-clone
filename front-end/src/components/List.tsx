@@ -25,8 +25,9 @@ class List extends React.Component<Myprops, Mystate>
     constructor(props: Myprops)
     {
         super(props);
+        const { title } = this.props;
         this.state = {
-            title: "title",
+            title: title,
             cards: [],
             isEditing: true
         };
@@ -34,20 +35,68 @@ class List extends React.Component<Myprops, Mystate>
 
     componentDidMount()
     {
+        const { id } = this.props;
+        fetch('http://localhost:8000/boards/lists/' + id.toString() + '/cards/', {
+            method: "GET",
+        }).then(res =>
+        {
+            return res.json();
+        }).then(data =>
+        {
+            data.forEach((item: any) =>
+            {
+                console.log(item);
+                this.initialCard(item);
+            })
+        })
+    }
 
+    initialCard(item: any)
+    {
+        let { cards } = this.state;
+
+        let cardid = -1, title = "title", order = -1, to_list = -1;
+        cardid = item.id;
+        title = item.title;
+        order = Number(item.order);
+        to_list = Number(item.to_list);
+
+        const newCard = <Card id={cardid} title={title} order={order} to_list={to_list} />
+        cards.push(newCard);
+        this.setState({ cards: cards });
     }
 
     addNewCard(e: any)
     {
         console.log("add new card");
         const { cards } = this.state;
+        const { id } = this.props;
 
-        let newCard = <Card/>;
+        const data = { title: "title", to_list: id };
+        let cardid = -1, title = "title", order = -1, to_list = -1;
+        fetch('http://localhost:8000/boards/cards/', {
+            method: "POST",
+            body: JSON.stringify(data),
+            headers: {
+                'content-type': 'application/json'
+            },
+        }).then(res =>
+        {
+            return res.json();
+        }).then(data =>
+        {
+            console.log(data);
 
-        cards.push(newCard);
+            cardid = data.id;
+            title = data.title;
+            to_list = data.to_list;
+            order = data.order;
 
-        this.setState({
-            cards: cards
+            const newCard = <Card id={cardid} title={title} to_list={to_list} order={order} />;
+            cards.push(newCard);
+            this.setState({
+                cards: cards
+            })
         })
     }
 
@@ -60,8 +109,8 @@ class List extends React.Component<Myprops, Mystate>
 
     clickList(e: any)
     {
-        const { id } = this.props;
-        console.log("id:", id);
+        const { title } = this.props;
+        console.log("title:", title);
     }
 
     editing(e: any)

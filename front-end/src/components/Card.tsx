@@ -7,12 +7,14 @@ import { TextField } from '@material-ui/core';
 
 interface Myprops
 {
-
+    id: number;
+    title: string;
+    order: number;
+    to_list: number;
 }
 interface Mystate
 {
     value: string;
-    id: number;
     isEditing: boolean;
 }
 
@@ -22,9 +24,9 @@ class Card extends React.Component<Myprops, Mystate>
     constructor(props: Myprops)
     {
         super(props);
+        const { title } = this.props;
         this.state = {
-            value: "",
-            id: -1,
+            value: title,
             isEditing: true
         };
     }
@@ -32,7 +34,6 @@ class Card extends React.Component<Myprops, Mystate>
 
     cardRename(e: any)
     {
-        console.log(e.target.value);
         this.setState({
             value: e.target.value
         });
@@ -49,6 +50,25 @@ class Card extends React.Component<Myprops, Mystate>
     {
         if (e.target.value === "")
             e.target.value = "card";
+
+        const { id } = this.props;
+        const { value } = this.state;
+        const data = { title: value };
+
+        fetch('http://localhost:8000/boards/cards/' + id.toString() + '/', {
+            method: "PATCH",
+            body: JSON.stringify(data),
+            headers: {
+                'content-type': 'application/json'
+            },
+        }).then(res =>
+        {
+            return res.json();
+        }).then(data =>
+        {
+            console.log(data);
+        })
+
         this.setState({
             isEditing: false,
             value: e.target.value
@@ -57,7 +77,7 @@ class Card extends React.Component<Myprops, Mystate>
 
     render()
     {
-        const { isEditing, value, id } = this.state;
+        const { isEditing, value } = this.state;
 
         let cardComponent = null;
 
