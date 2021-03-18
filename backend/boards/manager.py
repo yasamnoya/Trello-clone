@@ -103,6 +103,10 @@ class ListManager(models.Manager):
             instance.save()
             return instance
 
+    def cards(self, obj, **kwargs):
+        print(obj.cards.all())
+        return obj.cards.all()
+
     def move(self, obj, new_order):
         queryset = self.get_queryset()
 

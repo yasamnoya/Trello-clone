@@ -14,6 +14,15 @@ class ListViewSet(viewsets.ModelViewSet):
     # lookup_field = models.List.pk
     # filter_backends = (DjangoFilterBackend, )
 
+    @action(methods=['get'], detail=True)
+    def cards(self, request, *args, **kwargs):
+        obj = self.get_object()
+
+        # TODO: add some varifications to data
+
+        cards_of_list = models.List.objects.cards(obj)
+        return Response([serializers.CardSerializer(card).data for card in cards_of_list])
+
     @action(methods=['put'], detail=True)
     def move(self, request, *args, **kwargs):
         obj = self.get_object()
