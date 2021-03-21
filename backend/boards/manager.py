@@ -136,10 +136,15 @@ class ListManager(models.Manager):
         queryset = self.get_queryset()
 
         with transaction.atomic():
+            # move the lists below the deleted one
             queryset.filter(
                 order__gt=obj.order
             ).update(
                 order=models.F('order') - 1
             )
+
+            # delete the cards belong to the deleted list
+            obj.cards.all().delete()
+
 
             obj.delete()
