@@ -17,6 +17,17 @@ interface Mystate
 	// saveStatus: boolean[][];
 }
 
+// class ListObj
+// {
+// 	list: JSX.Element;
+// 	id: number;
+// 	constructor(list: JSX.Element, id: number)
+// 	{
+// 		this.list = list;
+// 		this.id = id;
+// 	}
+// }
+
 class Home extends React.Component<Myprops, Mystate>
 {
 	private timerId: any = 0;
@@ -25,7 +36,7 @@ class Home extends React.Component<Myprops, Mystate>
 	{
 		super(props);
 		this.state = {
-			list: [],
+			list: []
 		};
 	}
 
@@ -45,18 +56,18 @@ class Home extends React.Component<Myprops, Mystate>
 				this.initialList(item);
 			})
 
-			fetch('http://localhost:8000/boards/cards/', {
-				method: "GET",
-			}).then(res =>
-			{
-				return res.json();
-			}).then(data =>
-			{
-				data.forEach((item: any) =>
-				{
-					console.log(item);
-				})
-			})
+			// fetch('http://localhost:8000/boards/cards/', {
+			// 	method: "GET",
+			// }).then(res =>
+			// {
+			// 	return res.json();
+			// }).then(data =>
+			// {
+			// 	data.forEach((item: any) =>
+			// 	{
+			// 		console.log(item);
+			// 	})
+			// })
 		})
 	}
 
@@ -66,9 +77,23 @@ class Home extends React.Component<Myprops, Mystate>
 		//clearInterval(this.timerId);
 	}
 
-	update()
+	deleteList(id: number)
 	{
+		console.log("id to delete:", id);
+		let { list } = this.state;
 
+		let lists = list.filter(item =>
+		{
+			return item.props.id !== id;
+		});
+
+		this.setState({
+			list: lists
+		});
+
+		fetch('http://localhost:8000/boards/lists/' + id.toString() + '/', {
+			method: "DELETE",
+		})
 	}
 
 	initialList(item: any)
@@ -81,9 +106,13 @@ class Home extends React.Component<Myprops, Mystate>
 		console.log(title);
 		order = Number(item.order);
 
-		const newList = <List id={id} title={title} order={order} />
+		const newList = <List key={id} id={id} title={title} order={order} callHome={this.deleteList.bind(this)} />
+
 		list.push(newList);
-		this.setState({ list: list });
+
+		this.setState({
+			list: list
+		});
 	}
 
 	addList(e: any)
@@ -105,22 +134,26 @@ class Home extends React.Component<Myprops, Mystate>
 		}).then(data =>
 		{
 			console.log(data);
-			
+
 			id = Number(data.id);
 			order = Number(data.order);
 			console.log(id);
 
-			const newList = <List id={id} title={title} order={order} />
+			const newList = <List key={id} id={id} title={title} order={order} callHome={this.deleteList.bind(this)} />
+
 			list.push(newList);
-			this.setState({ list: list });
+
+			this.setState({
+				list: list
+			});
 		})
-
-
 	}
 
 	render()
 	{
 		const { list } = this.state;
+
+		console.log(list);
 
 		return (
 			<div className="lists-canvas">

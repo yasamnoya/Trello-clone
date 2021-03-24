@@ -3,3 +3,13 @@
     margin-top:5px;
     padding-left:10px;
 }
+
+.card-title{
+    display: inline;
+}
+
+.delete-button{
+    display: inline;
+    float:right;
+    height:10px;
+}

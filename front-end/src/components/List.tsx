@@ -6,18 +6,22 @@ import Card from './Card';
 import Input from '@material-ui/core/Input';
 import Button from '@material-ui/core/Button';
 import { TextField } from '@material-ui/core';
+import IconButton from '@material-ui/core/IconButton';
+import DeleteIcon from '@material-ui/icons/Delete';
 
 interface Myprops
 {
     id: number;
     title: string;
     order: number;
+    callHome: Function;
 }
 interface Mystate
 {
     title: string;
     cards: JSX.Element[];
     isEditing: boolean;
+    isDeletable: boolean;
 }
 
 class List extends React.Component<Myprops, Mystate>
@@ -29,8 +33,28 @@ class List extends React.Component<Myprops, Mystate>
         this.state = {
             title: title,
             cards: [],
-            isEditing: true
+            isEditing: false,
+            isDeletable: true
         };
+    }
+
+    deleteCard(id: number)
+    {
+        console.log("id to delete:", id);
+        let { cards } = this.state;
+
+        let newCards = cards.filter(item =>
+        {
+            return item.props.id !== id;
+        });
+
+        this.setState({
+            cards: newCards
+        });
+
+        fetch('http://localhost:8000/boards/cards/' + id.toString() + '/', {
+            method: "DELETE",
+        })
     }
 
     componentDidMount()
@@ -61,8 +85,8 @@ class List extends React.Component<Myprops, Mystate>
         order = Number(item.order);
         to_list = Number(item.to_list);
 
-        const newCard = <Card id={cardid} title={title} order={order} to_list={to_list} />
-        cards.push(newCard);
+        const newCard = <Card key={cardid} id={cardid} title={title} order={order} to_list={to_list} callList={this.deleteCard.bind(this)} />
+        cards[cardid] = newCard;
         this.setState({ cards: cards });
     }
 
@@ -92,8 +116,8 @@ class List extends React.Component<Myprops, Mystate>
             to_list = data.to_list;
             order = data.order;
 
-            const newCard = <Card id={cardid} title={title} to_list={to_list} order={order} />;
-            cards.push(newCard);
+            const newCard = <Card id={cardid} title={title} to_list={to_list} order={order} callList={this.deleteCard.bind(this)} />;
+            cards[cardid] = newCard;
             this.setState({
                 cards: cards
             })
@@ -125,10 +149,11 @@ class List extends React.Component<Myprops, Mystate>
         if (e.target.value === "")
             e.target.value = "title";
 
+        const { id } = this.props;
         const { title } = this.state;
         const data = { title: title };
 
-        fetch('http://localhost:8000/boards/lists/', {
+        fetch('http://localhost:8000/boards/lists/' + id.toString() + '/', {
             method: "PUT",
             body: JSON.stringify(data),
             headers: {
@@ -148,16 +173,44 @@ class List extends React.Component<Myprops, Mystate>
         });
     }
 
+    displayDeleteButton(e: any)
+    {
+        console.log("delete list");
+    }
+
+    deleteList(e: any)
+    {
+        const { id, callHome } = this.props;
+        callHome(id);
+    }
 
     render()
     {
-        const { cards, isEditing, title } = this.state;
+        const { cards, isEditing, title, isDeletable } = this.state;
         let titleComponent = null;
+
+        let deleteButton = null;
+
+        if (isDeletable)
+            deleteButton =
+                <IconButton aria-label="delete" onClick={this.deleteList.bind(this)}>
+                    <DeleteIcon />
+                </IconButton>
+        else
+            deleteButton = null;
 
         if (isEditing)
             titleComponent = <TextField id="outlined-title" variant="outlined" onBlur={this.notEditing.bind(this)} onChange={this.rename.bind(this)} onClick={this.clickList.bind(this)} value={title} />
         else
-            titleComponent = <label onClick={this.editing.bind(this)}>{title}</label>
+            titleComponent =
+                <div onMouseOver={this.displayDeleteButton.bind(this)}>
+                    <label onClick={this.editing.bind(this)} >
+                        {title}
+                    </label>
+                    <div className="delete-button">
+                        {deleteButton}
+                    </div>
+                </div>
 
         return (
             <div className="list-wrapper">

@@ -1,9 +1,9 @@
 import React from 'react';
 import '../css/Card.css';
 import { HashRouter as Router, Route } from 'react-router-dom';
-import Home from './Home';
-import Input from '@material-ui/core/Input';
 import { TextField } from '@material-ui/core';
+import IconButton from '@material-ui/core/IconButton';
+import DeleteIcon from '@material-ui/icons/Delete';
 
 interface Myprops
 {
@@ -11,11 +11,13 @@ interface Myprops
     title: string;
     order: number;
     to_list: number;
+    callList: Function;
 }
 interface Mystate
 {
     value: string;
     isEditing: boolean;
+    isDeletable: boolean;
 }
 
 
@@ -27,10 +29,10 @@ class Card extends React.Component<Myprops, Mystate>
         const { title } = this.props;
         this.state = {
             value: title,
-            isEditing: true
+            isEditing: false,
+            isDeletable: true
         };
     }
-
 
     cardRename(e: any)
     {
@@ -53,8 +55,8 @@ class Card extends React.Component<Myprops, Mystate>
 
         const { id } = this.props;
         const { value } = this.state;
-        const data = { title: value };
 
+        const data = { title: value };
         fetch('http://localhost:8000/boards/cards/' + id.toString() + '/', {
             method: "PATCH",
             body: JSON.stringify(data),
@@ -67,17 +69,45 @@ class Card extends React.Component<Myprops, Mystate>
         }).then(data =>
         {
             console.log(data);
+            this.setState({
+                isEditing: false
+            });
         })
-
-        this.setState({
-            isEditing: false,
-            value: e.target.value
-        });
     }
+
+    displayDeleteButton(e: any)
+    {
+        this.setState({
+            isDeletable: true
+        })
+    }
+
+    removeDeleteButton(e: any)
+    {
+
+    }
+
+    deleteCard(e: any)
+    {
+        const { id, callList } = this.props;
+        callList(id);
+    }
+
 
     render()
     {
-        const { isEditing, value } = this.state;
+        const { isEditing, value, isDeletable } = this.state;
+
+        let deleteButton = null;
+
+        if (isDeletable)
+            deleteButton =
+                <IconButton aria-label="delete" onClick={this.deleteCard.bind(this)}>
+                    <DeleteIcon />
+                </IconButton>
+        else
+            deleteButton = null;
+
 
         let cardComponent = null;
 
@@ -85,9 +115,15 @@ class Card extends React.Component<Myprops, Mystate>
             cardComponent = <TextField id="outlined-title" variant="outlined" onBlur={this.notEditing.bind(this)} onChange={this.cardRename.bind(this)} value={value} />
         else
             cardComponent =
-                <div className="card" onClick={this.editing.bind(this)}>
-                    {value}
+                <div className="card" onMouseOver={this.displayDeleteButton.bind(this)} onMouseOut={this.removeDeleteButton.bind(this)}>
+                    <span className="card-title" onClick={this.editing.bind(this)}>
+                        {value}
+                    </span>
+                    <div className="delete-button">
+                        {deleteButton}
+                    </div>
                 </div>
+
 
         return (
             <div>
